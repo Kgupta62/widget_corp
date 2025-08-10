@@ -17,12 +17,12 @@ if ($subject = get_subject_by_id($id)) {
         header("Location: content.php");
         exit;
     } else {
-        echo "Subject deletion failed" . "<br>";
-        echo mysqli_error($connection) . "<br>";
-        echo "<a href=\"content.php\">Return to main page</a>";
+        echo "<div class='text-red-600 font-bold'>Subject deletion failed</div><br>";
+        echo "<div class='text-sm'>" . mysqli_error($connection) . "</div><br>";
+        echo "<a class='text-blue-500 underline' href=\"content.php\">Return to main page</a>";
     }
 } else {
-    echo "No such subject exists";
+    echo "<div class='text-yellow-600 font-semibold'>No such subject exists</div>";
     header("Location: content.php");
     exit;
 }

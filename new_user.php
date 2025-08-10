@@ -31,41 +31,57 @@ if (isset($_POST['submit'])) {
         $result = mysqli_query($connection, $query);
 
         if ($result) {
-            $message = "The user was successfully added";
+            $message = "✅ The user was successfully added";
         } else {
-            $message = "The user can't be added";
+            $message = "❌ The user can't be added";
             $message .= "<br>" . mysqli_error($connection);
         }
 
     } else {
-        $message = "There were " . count($errors) . " error(s) in the form.";
-        echo "<p>";
-        echo "Please review the following fields:<br>";
+        $message = "⚠️ There were " . count($errors) . " error(s) in the form.";
+        $message .= "<ul class='list-disc pl-5 text-red-600'>";
         foreach ($errors as $error) {
-            echo "- " . htmlspecialchars($error) . "<br>";
+            $message .= "<li>" . htmlspecialchars($error) . "</li>";
         }
-        echo "</p>";
+        $message .= "</ul>";
     }
 }
 ?>
 
 <?php include("includes/header.php"); ?>
-<table id="structure">
-    <tr>
-        <td id="navigation">
-            <a href="staff.php">Return to menu</a>
-        </td>
-        <td align="center" id="page">
-            <p class="message"><?php if (isset($message)) { echo $message; $message = ""; } ?></p>
-            <h2>Add a new user</h2>
-            <div class="page_content">
-                <form action="new_user.php" method="post">
-                    <p>Username: <input type="text" name="username"></p>
-                    <p>Password: <input type="password" name="password"></p>
-                    <p><input type="submit" value="Create User" name="submit"></p>
-                </form>
-            </div>
-        </td>
-    </tr>
-</table>
+
+<div class="max-w-2xl mx-auto py-10 px-6">
+    <a href="staff.php" class="text-rose-600 hover:underline">&larr; Return to menu</a>
+
+    <?php if (!empty($message)): ?>
+        <div class="mt-4 p-4 rounded-lg 
+                    <?php echo (strpos($message, '✅') !== false) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
+            <?php echo $message; ?>
+        </div>
+    <?php endif; ?>
+
+    <h2 class="text-3xl font-bold text-slate-800 mt-6 mb-6">Add a New User</h2>
+
+    <form action="new_user.php" method="post" class="bg-white p-6 rounded-lg shadow-lg space-y-5">
+        <div>
+            <label for="username" class="block font-medium text-slate-700 mb-1">Username</label>
+            <input type="text" name="username" id="username" 
+                   class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-rose-500 focus:outline-none">
+        </div>
+
+        <div>
+            <label for="password" class="block font-medium text-slate-700 mb-1">Password</label>
+            <input type="password" name="password" id="password" 
+                   class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-rose-500 focus:outline-none">
+        </div>
+
+        <div>
+            <button type="submit" name="submit" 
+                    class="w-full bg-rose-600 text-white py-2 px-4 rounded-lg hover:bg-rose-700 transition">
+                Create User
+            </button>
+        </div>
+    </form>
+</div>
+
 <?php require("includes/footer.php"); ?>

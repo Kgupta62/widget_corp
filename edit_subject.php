@@ -66,51 +66,77 @@ if ($sel_page) {
 ?>
 
 <?php include("includes/header.php"); ?>
-<table id="structure">
-    <tr>
-        <td id="navigation">
-            <?php navigation($sel_subj, $sel_page); ?>
-        </td>
-        <td id="page">
-            <p class="message"><?php echo $message; ?></p>
-            <?php if (!empty($sel_subject)) { ?>
-                <h2>Edit Subject: <?php echo htmlentities($sel_subject['menu_name']); ?></h2>
-                <form method="post" action="edit_subject.php?subj=<?php echo urlencode($sel_subj); ?>">
-                    <p>Subject Name:
-                        <input type="text" name="menu_name" id="menu_name"
-                               value="<?php echo htmlentities($sel_subject['menu_name']); ?>">
-                    </p>
-                    <p>Position:
-                        <select name="position">
-                            <?php
-                            $su = get_all_subjects(false);
-                            $number = mysqli_num_rows($su);
-                            for ($count = 1; $count <= $number; $count++) {
-                                echo "<option value='{$count}'";
-                                if ($count == $sel_subject['position']) {
-                                    echo " selected";
-                                }
-                                echo ">{$count}</option>";
+
+<div class="flex gap-6 p-6">
+    <div class="w-1/4 bg-gray-100 p-4 rounded-lg shadow">
+        <?php navigation($sel_subj, $sel_page); ?>
+    </div>
+
+    <div class="flex-1 bg-white p-6 rounded-lg shadow">
+        <?php if (!empty($message)): ?>
+            <div class="mb-4 p-3 rounded text-white <?php echo empty($errors) ? 'bg-green-500' : 'bg-red-500'; ?>">
+                <?php echo $message; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($sel_subject)) { ?>
+            <h2 class="text-2xl font-bold mb-4">
+                Edit Subject: <?php echo htmlentities($sel_subject['menu_name']); ?>
+            </h2>
+
+            <form method="post" action="edit_subject.php?subj=<?php echo urlencode($sel_subj); ?>" class="space-y-4">
+                <div>
+                    <label class="block font-medium mb-1">Subject Name:</label>
+                    <input type="text" name="menu_name" id="menu_name"
+                           value="<?php echo htmlentities($sel_subject['menu_name']); ?>"
+                           class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block font-medium mb-1">Position:</label>
+                    <select name="position"
+                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <?php
+                        $su = get_all_subjects(false);
+                        $number = mysqli_num_rows($su);
+                        for ($count = 1; $count <= $number; $count++) {
+                            echo "<option value='{$count}'";
+                            if ($count == $sel_subject['position']) {
+                                echo " selected";
                             }
-                            ?>
-                        </select>
-                    </p>
-                    <p>Visible:
-                        <input type="radio" name="visible" value="0" <?php if ($sel_subject['visible'] == 0) echo "checked"; ?>> No
-                        &nbsp;
-                        <input type="radio" name="visible" value="1" <?php if ($sel_subject['visible'] == 1) echo "checked"; ?>> Yes
-                    </p>
-                    <input type="submit" name="submit" value="Edit Subject">
-                    &nbsp;&nbsp;
+                            echo ">{$count}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-medium mb-1">Visible:</label>
+                    <label class="mr-4">
+                        <input type="radio" name="visible" value="0" <?php if ($sel_subject['visible'] == 0) echo "checked"; ?>>
+                        No
+                    </label>
+                    <label>
+                        <input type="radio" name="visible" value="1" <?php if ($sel_subject['visible'] == 1) echo "checked"; ?>>
+                        Yes
+                    </label>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="submit" name="submit"
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Edit Subject</button>
                     <a href="delete_subject.php?subj=<?php echo urlencode($sel_subj); ?>"
-                       onclick="return confirm('Are you sure?');">Delete Subject</a>
-                </form>
-                <br>
-                <a href="content.php">Cancel</a>
-            <?php } else { ?>
-                <p>Subject not found.</p>
-            <?php } ?>
-        </td>
-    </tr>
-</table>
+                       onclick="return confirm('Are you sure?');"
+                       class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete Subject</a>
+                </div>
+            </form>
+
+            <br>
+            <a href="content.php" class="text-blue-500 hover:underline">Cancel</a>
+        <?php } else { ?>
+            <p class="text-gray-500">Subject not found.</p>
+        <?php } ?>
+    </div>
+</div>
+
 <?php require("includes/footer.php"); ?>
