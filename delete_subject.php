@@ -1,0 +1,31 @@
+<?php require_once("includes/connection.php"); ?>
+<?php require_once("includes/functions.php"); ?>
+
+<?php
+if (intval($_GET['subj']) == 0) {
+    header("Location: content.php");
+    exit;
+}
+
+$id = mysqli_real_escape_string($connection, $_GET['subj']);
+
+if ($subject = get_subject_by_id($id)) {
+    $query = "DELETE FROM subjects WHERE id = {$id} LIMIT 1";
+    $result = mysqli_query($connection, $query);
+
+    if ($result && mysqli_affected_rows($connection) == 1) {
+        header("Location: content.php");
+        exit;
+    } else {
+        echo "Subject deletion failed" . "<br>";
+        echo mysqli_error($connection) . "<br>";
+        echo "<a href=\"content.php\">Return to main page</a>";
+    }
+} else {
+    echo "No such subject exists";
+    header("Location: content.php");
+    exit;
+}
+?>
+
+<?php require("includes/footer.php"); ?>
